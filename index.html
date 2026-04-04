@@ -32,6 +32,7 @@
         }
 
         .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .container-wide { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
         /* Hero */
         .hero {
@@ -92,8 +93,14 @@
         }
         .screenshot-grid {
             display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .screenshot-grid.two-col {
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            max-width: 100%;
         }
         .screenshot-card {
             background: var(--bg-card);
@@ -106,6 +113,7 @@
         .screenshot-card img {
             width: 100%;
             display: block;
+            cursor: zoom-in;
         }
         .screenshot-card .caption {
             padding: 16px 20px;
@@ -118,6 +126,26 @@
         .screenshot-card .caption p {
             font-size: 14px;
             color: var(--text-dim);
+        }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            cursor: zoom-out;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 12px;
+            object-fit: contain;
         }
 
         /* Features */
@@ -244,7 +272,7 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 32px; }
             .hero .tagline { font-size: 17px; }
-            .screenshot-grid { grid-template-columns: 1fr; }
+            .screenshot-grid, .screenshot-grid.two-col { grid-template-columns: 1fr; }
             .feature-grid { grid-template-columns: 1fr; }
             .steps { grid-template-columns: 1fr; }
         }
@@ -256,7 +284,7 @@
     <div class="container">
         <img src="assets/images/icon.png" alt="VibeHub icon" class="hero-icon">
         <h1>Vibe<span>Hub</span></h1>
-        <p class="tagline">Dynamic Island for AI coding agents. An evolution of <a href="https://github.com/farouqaldori/claude-island" style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dim)">Claude Island</a>, bringing real-time session monitoring for Claude Code and OpenCode right from your Mac's notch.</p>
+        <p class="tagline">Dynamic Island for AI coding agents. An evolution of <a href="https://github.com/farouqaldori/claude-island" style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dim)">Claude Island</a>. Monitor Claude Code and OpenCode sessions from your Mac's notch or menu bar — with native SSH, auto mode, and guided setup.</p>
         <div class="hero-buttons">
             <a href="https://testflight.apple.com/join/E3JwuSfy" class="btn btn-primary">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
@@ -271,39 +299,62 @@
 </section>
 
 <section class="screenshots">
-    <div class="container">
+    <div class="container-wide">
+        <!-- Hero screenshots: single column, large -->
         <div class="screenshot-grid">
             <div class="screenshot-card">
-                <img src="assets/images/sessions.png" alt="Session monitoring" loading="lazy" style="border-radius:12px 12px 0 0">
+                <img src="assets/images/sessions.png" alt="Session monitoring" loading="lazy" onclick="openLightbox(this)">
                 <div class="caption">
                     <h3>Real-time Session Tracking</h3>
                     <p>Monitor all Claude Code and OpenCode sessions at a glance, including remote ones.</p>
                 </div>
             </div>
             <div class="screenshot-card">
-                <img src="assets/images/tools.png" alt="Tool tracking" loading="lazy">
+                <img src="assets/images/tools.png" alt="Tool tracking" loading="lazy" onclick="openLightbox(this)">
                 <div class="caption">
                     <h3>Tool Call Visibility</h3>
                     <p>See every tool call your AI agent makes in real time — edits, writes, commands, and more.</p>
                 </div>
             </div>
+        </div>
+        <!-- Secondary screenshots: two columns -->
+        <div class="screenshot-grid two-col" style="margin-top:24px">
             <div class="screenshot-card">
-                <img src="assets/images/remote.png" alt="Remote SSH" loading="lazy">
+                <img src="assets/images/menubar.png" alt="Menu Bar Mode" loading="lazy" onclick="openLightbox(this)">
                 <div class="caption">
-                    <h3>Remote SSH Monitoring</h3>
-                    <p>Connect to remote servers via SSH and monitor AI sessions running on any machine.</p>
+                    <h3>Menu Bar Mode</h3>
+                    <p>No notch? No problem. Access VibeHub from a menu bar icon with animated status on any Mac.</p>
                 </div>
             </div>
             <div class="screenshot-card">
-                <img src="assets/images/settings.png" alt="Settings" loading="lazy">
+                <img src="assets/images/remote.png" alt="Remote SSH" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>Native SSH Tunneling</h3>
+                    <p>Built-in SSH with libssh — no external processes. Monitor AI sessions on any remote server.</p>
+                </div>
+            </div>
+            <div class="screenshot-card">
+                <img src="assets/images/onboarding.png" alt="Guided Setup" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>Guided Setup</h3>
+                    <p>Pick your preferred mode on first launch. Auto mode adapts to your screen — notch or menu bar.</p>
+                </div>
+            </div>
+            <div class="screenshot-card">
+                <img src="assets/images/settings.png" alt="Settings" loading="lazy" onclick="openLightbox(this)">
                 <div class="caption">
                     <h3>Flexible Configuration</h3>
-                    <p>Notification sounds, multi-display support, launch at login, and more.</p>
+                    <p>Display mode picker, notification sounds, multi-display support, launch at login, and more.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="Enlarged screenshot">
+</div>
 
 <section class="features">
     <div class="container">
@@ -313,6 +364,16 @@
                 <div class="icon">&#127758;</div>
                 <h3>Dynamic Island UI</h3>
                 <p>Smoothly animates from your MacBook's notch. Expands to show session details, collapses when idle.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#9881;</div>
+                <h3>Menu Bar Mode</h3>
+                <p>Works on any Mac — even without a notch. Animated crab icon shows live status in the menu bar.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#10024;</div>
+                <h3>Auto Mode</h3>
+                <p>Automatically picks the best UI for your screen — Dynamic Island with notch, Menu Bar without.</p>
             </div>
             <div class="feature">
                 <div class="icon">&#9889;</div>
@@ -326,8 +387,8 @@
             </div>
             <div class="feature">
                 <div class="icon">&#128225;</div>
-                <h3>Remote SSH</h3>
-                <p>Monitor AI sessions on remote servers through SSH tunnels with automatic hook installation.</p>
+                <h3>Native SSH Tunneling</h3>
+                <p>Built-in libssh with reverse TCP forwarding. No spawned processes, App Store sandbox compatible.</p>
             </div>
             <div class="feature">
                 <div class="icon">&#128172;</div>
@@ -340,19 +401,9 @@
                 <p>Customizable sounds when Claude finishes. The notch bounces and expands to show results.</p>
             </div>
             <div class="feature">
-                <div class="icon">&#128187;</div>
-                <h3>Multi-Display</h3>
-                <p>Works across multiple monitors. Automatically detects which screen has the physical notch.</p>
-            </div>
-            <div class="feature">
                 <div class="icon">&#128268;</div>
                 <h3>OpenCode Support</h3>
                 <p>Works with both Claude Code and OpenCode CLI. Hooks are installed automatically.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">&#128640;</div>
-                <h3>Zero Config</h3>
-                <p>Just launch the app. Hooks are auto-installed on first run. Start coding immediately.</p>
             </div>
         </div>
     </div>
@@ -375,7 +426,7 @@
             <div class="step">
                 <div class="step-num">3</div>
                 <h3>Stay in the Flow</h3>
-                <p>The Dynamic Island shows live status. Approve permissions, see results, and switch contexts — all without leaving your editor.</p>
+                <p>Dynamic Island or menu bar — live status, permission approvals, and results without leaving your editor.</p>
             </div>
         </div>
     </div>
@@ -402,5 +453,18 @@
     </div>
 </footer>
 
+<script>
+function openLightbox(img) {
+    var overlay = document.getElementById('lightbox');
+    document.getElementById('lightbox-img').src = img.src;
+    overlay.classList.add('active');
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+});
+</script>
 </body>
 </html>

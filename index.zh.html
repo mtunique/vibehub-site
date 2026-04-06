@@ -355,9 +355,10 @@ document.querySelectorAll('.lang-switch a').forEach(function(a) {
 
 (function() {
     var saved = localStorage.getItem('vibehub-lang');
-    if (saved) return; // respect saved choice
-    var lang = navigator.language || navigator.userLanguage || '';
-    if (!lang.toLowerCase().startsWith('zh')) {
+    if (saved === 'zh') return; // user chose ZH, stay here
+    if (saved === 'en') { window.location.href = 'index.html'; return; } // user chose EN
+    // No saved preference: use browser language
+    if (!(navigator.language || navigator.userLanguage || '').toLowerCase().startsWith('zh')) {
         window.location.href = 'index.html';
     }
 })();

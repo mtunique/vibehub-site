@@ -347,20 +347,20 @@ function closeLightbox() {
 }
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-// Auto language redirect — only if user hasn't manually chosen a language
+document.querySelectorAll('.lang-switch a').forEach(function(a) {
+    a.addEventListener('click', function() {
+        localStorage.setItem('vibehub-lang', this.textContent.trim() === 'EN' ? 'en' : 'zh');
+    });
+});
+
 (function() {
-    if (sessionStorage.getItem('lang-chosen')) return;
+    var saved = localStorage.getItem('vibehub-lang');
+    if (saved) return; // respect saved choice
     var lang = navigator.language || navigator.userLanguage || '';
     if (!lang.toLowerCase().startsWith('zh')) {
         window.location.href = 'index.html';
     }
 })();
-
-document.querySelectorAll('.lang-switch a').forEach(function(a) {
-    a.addEventListener('click', function() {
-        sessionStorage.setItem('lang-chosen', '1');
-    });
-});
 </script>
 </body>
 </html>

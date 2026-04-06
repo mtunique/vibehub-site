@@ -217,6 +217,48 @@
         .req-item { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--text-dim); }
         .req-item .check { color: var(--accent); font-weight: 700; }
 
+        /* Open Source */
+        .open-source {
+            padding: 60px 0;
+            text-align: center;
+        }
+        .open-source h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+        .open-source .subtitle { font-size: 16px; color: var(--text-dim); max-width: 520px; margin: 0 auto 32px; }
+        .github-card {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 48px;
+            max-width: 520px;
+            width: 100%;
+        }
+        .github-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            transition: all 0.15s;
+        }
+        .github-link:hover { border-color: var(--accent); color: var(--accent); }
+        .github-link svg { width: 16px; height: 16px; }
+
         /* Footer */
         footer {
             border-top: 1px solid var(--border);
@@ -253,14 +295,18 @@
         <h1>Vibe <span>Hub</span></h1>
         <p class="tagline">Dynamic Island for AI coding agents. Monitor Claude Code and OpenCode sessions from your Mac's notch or menu bar.</p>
         <div class="hero-buttons">
-            <a href="https://github.com/mtunique/vibehub-site/releases/latest" class="btn btn-primary">
+            <a href="https://github.com/mtunique/VibeHub/releases/latest" class="btn btn-primary">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                 Download for Mac
+            </a>
+            <a href="https://github.com/mtunique/VibeHub" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
             </a>
         </div>
         <p class="version-note">
             Latest: v1.3.1 &middot; macOS 15+ &middot;
-            <a href="https://github.com/mtunique/vibehub-site/releases">All releases</a>
+            <a href="https://github.com/mtunique/VibeHub/releases">All releases</a>
         </p>
     </div>
 </section>
@@ -408,10 +454,40 @@
     </div>
 </section>
 
+<section class="open-source">
+    <div class="container">
+        <h2>Open Source</h2>
+        <p class="subtitle">Vibe Hub is open source and welcomes contributions — bug reports, feature ideas, and pull requests are all appreciated.</p>
+        <div class="github-card">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="var(--text-dim)"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z"/></svg>
+            <div style="font-size:18px;font-weight:600;">mtunique/VibeHub</div>
+            <div class="github-links">
+                <a href="https://github.com/mtunique/VibeHub" class="github-link">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg>
+                    Star
+                </a>
+                <a href="https://github.com/mtunique/VibeHub/fork" class="github-link">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/></svg>
+                    Fork
+                </a>
+                <a href="https://github.com/mtunique/VibeHub/issues" class="github-link">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0z"/></svg>
+                    Issues
+                </a>
+                <a href="https://github.com/mtunique/VibeHub/pulls" class="github-link">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354zM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0z"/></svg>
+                    Pull Requests
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <footer>
     <div class="container">
         <p>
             An evolution of <a href="https://github.com/anthropics/claude-island">Claude Island</a> &middot;
+            <a href="https://github.com/mtunique/VibeHub">GitHub</a> &middot;
             <a href="notices.html">Third-Party Notices</a> &middot;
             <a href="privacy.html">Privacy Policy</a> &middot;
             Apache 2.0

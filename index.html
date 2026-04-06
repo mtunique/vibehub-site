@@ -87,16 +87,6 @@
             max-width: 560px;
             margin: 0 auto 12px;
         }
-        .hero .trial-badge {
-            display: inline-block;
-            background: var(--accent);
-            color: #0a0a0f;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-bottom: 28px;
-        }
         .hero-buttons {
             display: flex;
             gap: 12px;
@@ -262,7 +252,6 @@
         <img src="assets/images/icon.png" alt="Vibe Hub icon" class="hero-icon">
         <h1>Vibe <span>Hub</span></h1>
         <p class="tagline">Dynamic Island for AI coding agents. Monitor Claude Code and OpenCode sessions from your Mac's notch or menu bar.</p>
-        <div class="trial-badge">30-day free trial</div>
         <div class="hero-buttons">
             <a href="https://github.com/mtunique/vibehub-site/releases/latest" class="btn btn-primary">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -415,7 +404,6 @@
             <div class="req-item"><span class="check">&#10003;</span> macOS 15.0+</div>
             <div class="req-item"><span class="check">&#10003;</span> Claude Code or OpenCode CLI</div>
             <div class="req-item"><span class="check">&#10003;</span> Any Mac (notch-optimized for MacBook)</div>
-            <div class="req-item"><span class="check">&#10003;</span> 30-day free trial</div>
         </div>
     </div>
 </section>
@@ -444,15 +432,21 @@ function closeLightbox() {
 }
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-// Auto language redirect based on browser language
+// Auto language redirect — only if user hasn't manually chosen a language
 (function() {
+    if (sessionStorage.getItem('lang-chosen')) return;
     var lang = navigator.language || navigator.userLanguage || '';
-    var isChinese = lang.toLowerCase().startsWith('zh');
-    var isZhPage = window.location.pathname.endsWith('index.zh.html');
-    if (isChinese && !isZhPage) {
+    if (lang.toLowerCase().startsWith('zh')) {
         window.location.href = 'index.zh.html';
     }
 })();
+
+// Mark manual language choice when switching
+document.querySelectorAll('.lang-switch a').forEach(function(a) {
+    a.addEventListener('click', function() {
+        sessionStorage.setItem('lang-chosen', '1');
+    });
+});
 </script>
 </body>
 </html>

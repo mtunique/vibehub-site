@@ -34,6 +34,30 @@
         .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
         .container-wide { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
+        /* Version badge */
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(74,222,128,0.1);
+            border: 1px solid rgba(74,222,128,0.3);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 0.02em;
+        }
+        .trial-note {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+        .trial-note strong {
+            color: var(--accent);
+        }
+
         /* Hero */
         .hero {
             text-align: center;
@@ -283,6 +307,7 @@
 <section class="hero">
     <div class="container">
         <img src="assets/images/icon.png" alt="Vibe Hub icon" class="hero-icon">
+        <div class="version-badge">&#x2728; v1.3.1 — Now Available</div>
         <h1>Vibe <span>Hub</span></h1>
         <p class="tagline">Dynamic Island for AI coding agents. An evolution of <a href="https://github.com/anthropics/claude-island" style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dim)">Claude Island</a>. Monitor Claude Code and OpenCode sessions from your Mac's notch or menu bar — with native SSH, auto mode, and guided setup.</p>
         <div class="hero-buttons">
@@ -291,6 +316,7 @@
                 Download for Mac
             </a>
         </div>
+        <p class="trial-note"><strong>30-day free trial</strong> &mdash; no sign-up required</p>
     </div>
 </section>
 
@@ -400,6 +426,16 @@
                 <div class="icon">&#128268;</div>
                 <h3>OpenCode Support</h3>
                 <p>Works with both Claude Code and OpenCode CLI. Hooks are installed automatically.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128065;</div>
+                <h3>Remote Terminal Switching</h3>
+                <p>The eye button jumps directly to the matching SSH tab in your terminal — no manual searching.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128273;</div>
+                <h3>Flexible Licensing</h3>
+                <p>30-day free trial included. Powered by LemonSqueezy for secure, hassle-free license activation.</p>
             </div>
         </div>
     </div>

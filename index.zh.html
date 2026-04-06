@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Hub — AI 编程助手的灵动岛</title>
+    <meta name="description" content="macOS 菜单栏 App，为 Claude Code 和 OpenCode CLI 提供灵动岛风格的实时监控。">
+    <meta property="og:title" content="Vibe Hub — AI 编程助手的灵动岛">
+    <meta property="og:description" content="在 Mac 刘海或菜单栏实时监控 Claude Code 和 OpenCode 会话。">
+    <meta property="og:image" content="assets/images/sessions.zh.png">
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #13131a;
+            --border: #1e1e2e;
+            --text: #e4e4ef;
+            --text-dim: #8888a0;
+            --accent: #4ade80;
+            --accent-dim: #22c55e;
+            --orange: #f97316;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .container-wide { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+            padding: 16px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .lang-switch {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .lang-switch a {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+            color: var(--text-dim);
+            transition: all 0.15s;
+        }
+        .lang-switch a.active, .lang-switch a:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .hero { text-align: center; padding: 60px 0 60px; }
+        .hero-icon { width: 96px; height: 96px; border-radius: 22px; margin-bottom: 24px; }
+        .hero h1 { font-size: 48px; font-weight: 700; letter-spacing: -1px; margin-bottom: 12px; }
+        .hero h1 span { color: var(--accent); }
+        .hero .tagline { font-size: 20px; color: var(--text-dim); max-width: 560px; margin: 0 auto 12px; }
+        .hero .trial-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #0a0a0f;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+        }
+        .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px; border-radius: 12px;
+            font-size: 16px; font-weight: 600; text-decoration: none;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary { background: var(--accent); color: #0a0a0f; }
+        .btn-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+        .btn svg { width: 20px; height: 20px; }
+        .version-note { margin-top: 16px; font-size: 13px; color: var(--text-dim); }
+        .version-note a { color: var(--accent-dim); text-decoration: none; }
+        .version-note a:hover { text-decoration: underline; }
+
+        .screenshots { padding: 40px 0 60px; }
+        .screenshot-grid { display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+        .screenshot-grid.two-col { grid-template-columns: 1fr 1fr; max-width: 100%; }
+        .screenshot-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; transition: transform 0.2s;
+        }
+        .screenshot-card:hover { transform: translateY(-4px); }
+        .screenshot-card img { width: 100%; display: block; cursor: zoom-in; }
+        .screenshot-card .caption { padding: 16px 20px; }
+        .screenshot-card .caption h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+        .screenshot-card .caption p { font-size: 14px; color: var(--text-dim); }
+
+        .lightbox-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9); z-index: 9999; cursor: zoom-out;
+            justify-content: center; align-items: center; padding: 24px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-overlay img { max-width: 100%; max-height: 100%; border-radius: 12px; object-fit: contain; }
+
+        .features { padding: 60px 0; }
+        .features h2 { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 40px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .feature { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+        .feature .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature h3 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+        .feature p { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+        .feature .tag {
+            display: inline-block; font-size: 10px; font-weight: 600;
+            padding: 2px 7px; border-radius: 4px; margin-bottom: 8px;
+            background: var(--accent); color: #0a0a0f;
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+
+        .how-it-works { padding: 60px 0; }
+        .how-it-works h2 { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 40px; }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .step { text-align: center; padding: 24px; }
+        .step-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--accent); color: #0a0a0f;
+            font-weight: 700; font-size: 18px; margin-bottom: 16px;
+        }
+        .step h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .step p { font-size: 14px; color: var(--text-dim); }
+
+        .requirements { padding: 40px 0 60px; text-align: center; }
+        .requirements h2 { font-size: 32px; font-weight: 700; margin-bottom: 20px; }
+        .req-list { display: inline-flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+        .req-item { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--text-dim); }
+        .req-item .check { color: var(--accent); font-weight: 700; }
+
+        footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--text-dim); font-size: 14px; }
+        footer a { color: var(--text-dim); text-decoration: none; }
+        footer a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .hero .tagline { font-size: 17px; }
+            .screenshot-grid, .screenshot-grid.two-col { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="lang-switch">
+        <a href="index.html">EN</a>
+        <a href="index.zh.html" class="active">中文</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container">
+        <img src="assets/images/icon.png" alt="Vibe Hub 图标" class="hero-icon">
+        <h1>Vibe <span>Hub</span></h1>
+        <p class="tagline">AI 编程助手的灵动岛。在 Mac 刘海或菜单栏实时监控 Claude Code 和 OpenCode 会话。</p>
+        <div class="trial-badge">30 天免费试用</div>
+        <div class="hero-buttons">
+            <a href="https://github.com/mtunique/vibehub-site/releases/latest" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                下载 Mac 版
+            </a>
+        </div>
+        <p class="version-note">
+            最新版本：v1.3.1 &middot; macOS 15+ &middot;
+            <a href="https://github.com/mtunique/vibehub-site/releases">历史版本</a>
+        </p>
+    </div>
+</section>
+
+<section class="screenshots">
+    <div class="container-wide">
+        <div class="screenshot-grid">
+            <div class="screenshot-card">
+                <img src="assets/images/sessions.zh.png" alt="会话监控" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>实时会话追踪</h3>
+                    <p>一眼掌握所有 Claude Code 和 OpenCode 会话——本地和远程，附带实时状态指示。</p>
+                </div>
+            </div>
+            <div class="screenshot-card">
+                <img src="assets/images/tools.zh.png" alt="工具调用追踪" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>工具调用可视化</h3>
+                    <p>实时查看每一次工具调用——文件编辑、命令执行、MCP 工具——并可直接批准或拒绝。</p>
+                </div>
+            </div>
+        </div>
+        <div class="screenshot-grid two-col" style="margin-top:24px">
+            <div class="screenshot-card">
+                <img src="assets/images/menubar.zh.png" alt="菜单栏模式" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>菜单栏模式</h3>
+                    <p>没有刘海屏？用螃蟹动画图标在任何 Mac 上显示实时状态。</p>
+                </div>
+            </div>
+            <div class="screenshot-card">
+                <img src="assets/images/remote.zh.png" alt="远程 SSH" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>远程 SSH 监控</h3>
+                    <p>添加远程服务器并通过 SSH 监控 AI 会话——点击眼睛图标自动切换到对应终端标签。</p>
+                </div>
+            </div>
+            <div class="screenshot-card">
+                <img src="assets/images/onboarding.zh.png" alt="引导设置" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>引导式配置</h3>
+                    <p>首次启动选择显示模式。自动模式根据屏幕类型选择灵动岛或菜单栏。</p>
+                </div>
+            </div>
+            <div class="screenshot-card">
+                <img src="assets/images/settings.zh.png" alt="设置" loading="lazy" onclick="openLightbox(this)">
+                <div class="caption">
+                    <h3>灵活配置</h3>
+                    <p>显示模式、通知提示音、多显示器支持、远程主机管理。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<section class="features">
+    <div class="container">
+        <h2>功能特性</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <div class="icon">&#127758;</div>
+                <h3>灵动岛 UI</h3>
+                <p>从 MacBook 刘海处流畅展开，显示会话详情，空闲时自动收起。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#9881;</div>
+                <h3>菜单栏模式</h3>
+                <p>适用于所有 Mac，包括无刘海屏型号。动态螃蟹图标实时显示工作状态。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#10024;</div>
+                <h3>自动适配模式</h3>
+                <p>自动选择最适合当前屏幕的 UI——有刘海用灵动岛，否则用菜单栏。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#9889;</div>
+                <h3>实时工具追踪</h3>
+                <p>实时观看 AI 助手的每一次文件编辑、命令执行和工具调用。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128274;</div>
+                <h3>权限审批</h3>
+                <p>直接在悬浮窗中批准或拒绝工具执行——无需切换终端窗口。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128225;</div>
+                <h3>原生 SSH 隧道</h3>
+                <p>内置 libssh 反向 TCP 转发，无需额外进程。监控任意远程服务器上的 AI 会话。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128250;</div>
+                <div class="tag">新功能</div>
+                <h3>智能标签切换</h3>
+                <p>点击眼睛图标，即使多个 SSH 连接指向同一台服务器，也能精准切换到对应的终端标签。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128172;</div>
+                <h3>对话历史</h3>
+                <p>完整的对话历史，支持 Markdown 渲染。随时回顾 AI 助手说了什么、做了什么。</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#128268;</div>
+                <h3>OpenCode 支持</h3>
+                <p>同时支持 Claude Code 和 OpenCode CLI，首次启动自动安装 Hook 脚本。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="container">
+        <h2>工作原理</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h3>下载并启动</h3>
+                <p>下载 DMG 并将 Vibe Hub 拖入应用程序文件夹。首次启动会自动安装 Hook 脚本到 <code>~/.claude/hooks/</code>。</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h3>正常编程</h3>
+                <p>像往常一样使用 Claude Code 或 OpenCode。Hook 脚本通过本地 Unix Socket 将会话事件发送给 Vibe Hub。</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h3>保持专注</h3>
+                <p>实时状态、权限审批、任务完成通知——全部显示在刘海或菜单栏，无需切换窗口。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="requirements">
+    <div class="container">
+        <h2>系统要求</h2>
+        <div class="req-list">
+            <div class="req-item"><span class="check">&#10003;</span> macOS 15.0+</div>
+            <div class="req-item"><span class="check">&#10003;</span> Claude Code 或 OpenCode CLI</div>
+            <div class="req-item"><span class="check">&#10003;</span> 任意 Mac（针对 MacBook 刘海屏优化）</div>
+            <div class="req-item"><span class="check">&#10003;</span> 30 天免费试用</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>
+            基于 <a href="https://github.com/anthropics/claude-island">Claude Island</a> 演进 &middot;
+            <a href="notices.html">第三方声明</a> &middot;
+            <a href="privacy.html">隐私政策</a> &middot;
+            Apache 2.0
+        </p>
+        <p style="margin-top:8px;font-size:12px;color:#666">
+            使用了 <a href="https://www.libssh.org/">libssh</a>（LGPL-2.1）。源码：<a href="https://git.libssh.org/projects/libssh.git/">git.libssh.org</a>
+        </p>
+    </div>
+</footer>
+
+<script>
+function openLightbox(img) {
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+// Auto language redirect
+(function() {
+    var lang = navigator.language || navigator.userLanguage || '';
+    var isChinese = lang.toLowerCase().startsWith('zh');
+    var isZhPage = window.location.pathname.endsWith('index.zh.html');
+    if (!isChinese && isZhPage) {
+        window.location.href = 'index.html';
+    }
+})();
+</script>
+</body>
+</html>
